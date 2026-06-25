@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { siteUrl } from "@/lib/config";
 import { formatDateTime } from "@/lib/format";
 import { adminSupabase } from "@/lib/supabase";
+import TicketCard from "@/components/tickets/TicketCard";
 
 export const dynamic = "force-dynamic";
 
@@ -11,18 +12,6 @@ type TicketPageProps = {
     token: string;
   };
 };
-
-function ticketStatusLabel(checkedInAt: string | null, status: string) {
-  if (checkedInAt) {
-    return "Ya usado";
-  }
-
-  if (status === "valid") {
-    return "Valido para ingreso";
-  }
-
-  return "No valido";
-}
 
 export default async function TicketPage({ params }: TicketPageProps) {
   const supabase = adminSupabase();
@@ -58,39 +47,29 @@ export default async function TicketPage({ params }: TicketPageProps) {
       light: "#ffffff"
     }
   });
+  const status: "valid" | "used" | "cancelled" = ticket.checked_in_at ? "used" : ticket.status === "valid" ? "valid" : "cancelled";
+  const formattedDate = event?.starts_at ? formatDateTime(event.starts_at) : undefined;
 
   return (
     <main className="shell page">
       <div className="eyebrow">Ticket digital</div>
       <h1>{event?.name}</h1>
-      <section className="panel ticket-pass">
-        <div className="ticket-summary">
-          <span className={`status ${ticket.checked_in_at ? "duplicate" : ticket.status}`}>
-            {ticketStatusLabel(ticket.checked_in_at, ticket.status)}
-          </span>
-          <h2>{ticketType?.name}</h2>
-          <dl className="details-list">
-            <div>
-              <dt>Asistente</dt>
-              <dd>{ticket.attendee_name || "Sin nombre"}</dd>
-            </div>
-            <div>
-              <dt>Lugar</dt>
-              <dd>{event?.venue}</dd>
-            </div>
-            {event?.starts_at && (
-              <div>
-                <dt>Fecha</dt>
-                <dd>{formatDateTime(event.starts_at)}</dd>
-              </div>
-            )}
-          </dl>
-        </div>
-        <div className="qr-box">
-          <img src={qr} alt="Codigo QR del ticket" />
-          <p className="fineprint">Presenta este QR en la entrada. Cada ticket se valida una sola vez.</p>
-        </div>
-      </section>
+      <TicketCard
+        event={{
+          name: event?.name,
+          venue: event?.venue,
+          date: formattedDate
+        }}
+        ticket={{
+          id: ticket.id,
+          type: ticketType?.name,
+          holder: ticket.attendee_name || "Sin nombre",
+          ref: ticket.token.slice(0, 10).toUpperCase(),
+          qrDataUrl: qr
+        }}
+        status={status}
+      />
+      <p className="fineprint ticket-note">Presenta este QR en la entrada. Cada ticket se valida una sola vez.</p>
     </main>
   );
 }

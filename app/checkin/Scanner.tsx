@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
+import { Camera, RotateCcw } from "lucide-react";
+import ValidationResult from "@/components/tickets/ValidationResult";
 
 type CheckinResponse = {
   result: "accepted" | "duplicate" | "invalid" | "cancelled" | "unpaid";
@@ -25,6 +26,22 @@ function resultTitle(result: CheckinResponse["result"]) {
   };
 
   return labels[result];
+}
+
+function validationState(result: CheckinResponse["result"]): "success" | "used" | "invalid" | "cancelled" {
+  if (result === "accepted") {
+    return "success";
+  }
+
+  if (result === "duplicate") {
+    return "used";
+  }
+
+  if (result === "cancelled") {
+    return "cancelled";
+  }
+
+  return "invalid";
 }
 
 export default function Scanner({ initialToken }: ScannerProps) {
@@ -82,9 +99,6 @@ export default function Scanner({ initialToken }: ScannerProps) {
     };
   }, []);
 
-  const accepted = result?.result === "accepted";
-  const blocked = result && result.result !== "accepted";
-
   return (
     <div className="panel">
       <div className="section-heading">
@@ -131,20 +145,15 @@ export default function Scanner({ initialToken }: ScannerProps) {
       </form>
 
       {result && (
-        <div className={`result-box checkin-result ${accepted ? "accepted" : "blocked"}`}>
-          <h2>
-            {accepted ? <CheckCircle2 size={34} /> : <XCircle size={34} />} {resultTitle(result.result)}
-          </h2>
-          <p>
-            <span className={`status ${result.result}`}>{result.message}</span>
-          </p>
-          {blocked && <p className="decision-text">No permitir ingreso sin verificacion del responsable.</p>}
-          <p>
-            <strong>{result.ticketType}</strong>
-          </p>
-          <p>{result.attendeeName}</p>
-          <p className="muted">{result.attendeeEmail}</p>
-        </div>
+        <ValidationResult
+          result={validationState(result.result)}
+          attendee={{
+            name: result.attendeeName,
+            ticketType: result.ticketType,
+            eventName: resultTitle(result.result)
+          }}
+          onNext={() => setResult(null)}
+        />
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/components/ui/vt/index.css";
 
 export const metadata: Metadata = {
   title: "Ticketing Evento",
@@ -10,9 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body>
-        <header className="topbar">
+        <header className="topbar vt-topbar">
           <div className="shell topbar-inner">
-            <a className="brand" href="/">
+            <a className="brand vt-topbar-title" href="/">
               Ticketing Evento
             </a>
             <nav className="nav">
