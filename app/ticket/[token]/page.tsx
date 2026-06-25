@@ -51,25 +51,42 @@ export default async function TicketPage({ params }: TicketPageProps) {
   const formattedDate = event?.starts_at ? formatDateTime(event.starts_at) : undefined;
 
   return (
-    <main className="shell page">
-      <div className="eyebrow">Ticket digital</div>
-      <h1>{event?.name}</h1>
-      <TicketCard
-        event={{
-          name: event?.name,
-          venue: event?.venue,
-          date: formattedDate
-        }}
-        ticket={{
-          id: ticket.id,
-          type: ticketType?.name,
-          holder: ticket.attendee_name || "Sin nombre",
-          ref: ticket.token.slice(0, 10).toUpperCase(),
-          qrDataUrl: qr
-        }}
-        status={status}
-      />
-      <p className="fineprint ticket-note">Presenta este QR en la entrada. Cada ticket se valida una sola vez.</p>
+    <main className="shell page vt-ticket-screen">
+      <section className="vt-ticket-hero">
+        <div>
+          <span className="vt-badge vt-badge-success">Ticket digital</span>
+          <h1>{event?.name}</h1>
+          <p>Presenta este codigo en la entrada. No compartas tu QR.</p>
+        </div>
+      </section>
+
+      <div className="vt-ticket-layout">
+        <TicketCard
+          event={{
+            name: event?.name,
+            venue: event?.venue,
+            date: formattedDate
+          }}
+          ticket={{
+            id: ticket.id,
+            type: ticketType?.name,
+            holder: ticket.attendee_name || "Sin nombre",
+            ref: ticket.token.slice(0, 10).toUpperCase(),
+            qrDataUrl: qr
+          }}
+          status={status}
+        />
+
+        <aside className="vt-card vt-card-lg vt-ticket-instructions">
+          <h2>En puerta</h2>
+          <ol>
+            <li>Ten este QR listo antes de llegar.</li>
+            <li>Sube el brillo del celular.</li>
+            <li>El QR se valida una sola vez.</li>
+          </ol>
+          <p className="vt-field-hint">Si el ticket aparece como usado, el staff debe revisarlo antes de permitir ingreso.</p>
+        </aside>
+      </div>
     </main>
   );
 }

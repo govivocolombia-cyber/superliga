@@ -100,49 +100,76 @@ export default function Scanner({ initialToken }: ScannerProps) {
   }, []);
 
   return (
-    <div className="panel">
-      <div className="section-heading">
-        <span className="step-pill">1</span>
-        <div>
-          <h2>Preparar escaner</h2>
-          <p className="muted">Ingresa el PIN del staff y escanea el QR del asistente.</p>
+    <div className="vt-checkin-console">
+      <section className="vt-checkin-stage">
+        <div className="vt-checkin-live">
+          <span />
+          <strong>{deviceLabel}</strong>
         </div>
-      </div>
-      <div className="form">
-        <label className="field">
-          <span>PIN de check-in</span>
-          <input value={pin} onChange={(event) => setPin(event.target.value)} type="password" placeholder="PIN del staff" />
-        </label>
-        <label className="field">
-          <span>Punto de entrada</span>
-          <input value={deviceLabel} onChange={(event) => setDeviceLabel(event.target.value)} />
-        </label>
-      </div>
 
-      <div className="form">
-        <button className="button" type="button" onClick={isScanning ? stopScanner : startScanner}>
+        <div className={`vt-camera-shell ${isScanning ? "is-scanning" : ""}`}>
+          <div id="reader" />
+          {!isScanning && (
+            <div className="vt-camera-empty">
+              <Camera size={38} />
+              <strong>Camara lista</strong>
+              <span>Presiona escanear para abrir el lector QR.</span>
+            </div>
+          )}
+          <div className="vt-viewfinder compact" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+            <i />
+          </div>
+        </div>
+      </section>
+
+      <section className="vt-card vt-card-lg vt-checkin-controls">
+        <div className="vt-panel-title">
+          <div>
+            <h2>Validacion de entrada</h2>
+            <p>PIN del staff, punto de entrada y alternativa manual.</p>
+          </div>
+          <span className={`vt-badge ${isScanning ? "vt-badge-live" : "vt-badge-neutral"}`}>
+            {isScanning && <span className="vt-badge-dot" />}
+            {isScanning ? "Escaneando" : "En espera"}
+          </span>
+        </div>
+
+        <div className="vt-form">
+          <label className="vt-field">
+            <span className="vt-field-label">PIN de check-in</span>
+            <input value={pin} onChange={(event) => setPin(event.target.value)} type="password" placeholder="PIN del staff" />
+          </label>
+          <label className="vt-field">
+            <span className="vt-field-label">Punto de entrada</span>
+            <input value={deviceLabel} onChange={(event) => setDeviceLabel(event.target.value)} />
+          </label>
+        </div>
+
+        <button className="vt-btn vt-btn-primary vt-btn-xl vt-btn-full" type="button" onClick={isScanning ? stopScanner : startScanner}>
           {isScanning ? <RotateCcw size={18} /> : <Camera size={18} />}
           {isScanning ? "Detener camara" : "Escanear QR"}
         </button>
-      </div>
-
-      <div id="reader" style={{ minHeight: isScanning ? 320 : 0 }} />
 
       <form
-        className="form"
+          className="vt-form vt-manual-form"
         onSubmit={(event) => {
           event.preventDefault();
           validate(manualToken);
         }}
       >
-        <label className="field">
-          <span>Validacion manual</span>
+          <label className="vt-field">
+            <span className="vt-field-label">Validacion manual</span>
           <input value={manualToken} onChange={(event) => setManualToken(event.target.value)} />
         </label>
-        <button className="button secondary" type="submit" disabled={!manualToken.trim()}>
+          <button className="vt-btn vt-btn-secondary vt-btn-full" type="submit" disabled={!manualToken.trim()}>
           Validar manual
         </button>
       </form>
+      </section>
 
       {result && (
         <ValidationResult

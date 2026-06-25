@@ -889,9 +889,429 @@ h3 {
   letter-spacing: 0.06em;
 }
 
+.vt-public-screen {
+  min-height: calc(100dvh - 64px);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, .08), transparent 28%),
+    linear-gradient(180deg, var(--vt-bg-high), var(--vt-bg));
+}
+
+.vt-event-hero {
+  padding: var(--vt-sp-16) 0 var(--vt-sp-8);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, .8fr);
+  gap: var(--vt-sp-10);
+  align-items: start;
+}
+
+.vt-event-copy {
+  display: grid;
+  gap: var(--vt-sp-6);
+}
+
+.vt-event-copy h1,
+.vt-admin-hero h1,
+.vt-ticket-hero h1 {
+  margin: 0;
+  font-size: clamp(44px, 7vw, 86px);
+  line-height: .92;
+  letter-spacing: 0;
+}
+
+.vt-event-facts {
+  display: grid;
+  gap: var(--vt-sp-3);
+}
+
+.vt-event-facts div {
+  display: flex;
+  align-items: center;
+  gap: var(--vt-sp-3);
+  color: var(--vt-text-2);
+}
+
+.vt-event-facts svg,
+.vt-process-grid svg {
+  color: var(--vt-brand);
+}
+
+.vt-event-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vt-sp-3);
+}
+
+.vt-checkout-card {
+  position: sticky;
+  top: 84px;
+}
+
+.vt-flow-head,
+.vt-panel-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vt-sp-4);
+  margin-bottom: var(--vt-sp-5);
+}
+
+.vt-flow-head > span {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--vt-r-full);
+  background: var(--vt-brand);
+  color: var(--vt-brand-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  flex: 0 0 auto;
+}
+
+.vt-flow-head h2,
+.vt-panel-title h2 {
+  margin: 0;
+}
+
+.vt-flow-head p,
+.vt-panel-title p {
+  color: var(--vt-text-3);
+  margin: 4px 0 0;
+}
+
+.vt-ticket-picker {
+  display: grid;
+  gap: var(--vt-sp-3);
+  margin-bottom: var(--vt-sp-5);
+}
+
+.vt-ticket-choice {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--vt-sp-4);
+  align-items: center;
+  padding: var(--vt-sp-4);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-r-lg);
+  background: var(--vt-bg-high);
+}
+
+.vt-ticket-choice h3,
+.vt-ticket-choice p {
+  margin: 0;
+}
+
+.vt-ticket-choice p {
+  color: var(--vt-text-3);
+  margin-top: 5px;
+}
+
+.vt-ticket-choice div:last-child {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+}
+
+.vt-ticket-choice strong {
+  font-size: var(--vt-text-md);
+}
+
+.vt-ticket-choice span {
+  color: var(--vt-text-3);
+  font-size: var(--vt-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vt-form {
+  display: grid;
+  gap: var(--vt-sp-4);
+}
+
+.vt-form input,
+.vt-form select,
+.vt-inline-confirm input {
+  width: 100%;
+  background: var(--vt-bg-high);
+  border: 1.5px solid var(--vt-border);
+  border-radius: var(--vt-r-md);
+  color: var(--vt-text);
+  min-height: 52px;
+  padding: 0 var(--vt-sp-4);
+  outline: none;
+}
+
+.vt-form input:focus,
+.vt-form select:focus,
+.vt-inline-confirm input:focus {
+  border-color: var(--vt-brand);
+  box-shadow: 0 0 0 3px var(--vt-brand-glow);
+}
+
+.vt-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--vt-sp-3);
+}
+
+.vt-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--vt-sp-4);
+  padding: var(--vt-sp-6) 0 var(--vt-sp-16);
+}
+
+.vt-process-grid h3,
+.vt-process-grid p {
+  margin: 0;
+}
+
+.vt-process-grid p {
+  color: var(--vt-text-3);
+}
+
+.vt-admin-screen {
+  display: grid;
+  gap: var(--vt-sp-6);
+}
+
+.vt-admin-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--vt-sp-6);
+}
+
+.vt-admin-hero p,
+.vt-ticket-hero p {
+  color: var(--vt-text-2);
+  font-size: var(--vt-text-lg);
+  line-height: 1.5;
+  margin: var(--vt-sp-4) 0 0;
+}
+
+.vt-admin-stats {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: var(--vt-sp-4);
+}
+
+.vt-alert {
+  border-radius: var(--vt-r-lg);
+  padding: var(--vt-sp-4);
+  font-weight: 700;
+}
+
+.vt-alert-success {
+  color: var(--vt-success);
+  background: var(--vt-success-bg);
+  border: 1px solid var(--vt-success-border);
+}
+
+.vt-alert-warning {
+  color: var(--vt-warning);
+  background: var(--vt-warning-bg);
+  border: 1px solid var(--vt-warning-border);
+}
+
+.vt-orders-panel {
+  display: grid;
+  gap: var(--vt-sp-5);
+}
+
+.vt-order-list {
+  display: grid;
+  gap: var(--vt-sp-3);
+}
+
+.vt-order-row {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.5fr) minmax(160px, .75fr) auto minmax(190px, 1fr);
+  gap: var(--vt-sp-4);
+  align-items: center;
+  padding: var(--vt-sp-4);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-r-lg);
+  background: var(--vt-bg-high);
+}
+
+.vt-order-buyer,
+.vt-order-money {
+  display: grid;
+  gap: 4px;
+}
+
+.vt-order-buyer span,
+.vt-order-buyer small,
+.vt-order-money span {
+  color: var(--vt-text-3);
+}
+
+.vt-order-buyer small {
+  font-size: var(--vt-text-xs);
+  word-break: break-all;
+}
+
+.vt-order-actions {
+  display: grid;
+  gap: var(--vt-sp-3);
+}
+
+.vt-inline-confirm {
+  display: grid;
+  gap: var(--vt-sp-2);
+}
+
+.vt-inline-confirm span {
+  display: block;
+  color: var(--vt-text-3);
+  font-size: var(--vt-text-xs);
+  margin-bottom: 6px;
+}
+
+.vt-ticket-screen {
+  max-width: 980px;
+}
+
+.vt-ticket-hero {
+  margin-bottom: var(--vt-sp-8);
+}
+
+.vt-ticket-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: var(--vt-sp-6);
+  align-items: start;
+}
+
+.vt-ticket-instructions h2 {
+  margin-top: 0;
+}
+
+.vt-ticket-instructions ol {
+  display: grid;
+  gap: var(--vt-sp-3);
+  padding-left: 20px;
+  color: var(--vt-text-2);
+}
+
+.vt-ticket-note {
+  margin-top: var(--vt-sp-4);
+}
+
+.vt-checkin-page {
+  max-width: 1180px;
+}
+
+.vt-checkin-console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--vt-sp-6);
+  align-items: start;
+  margin-top: var(--vt-sp-8);
+}
+
+.vt-checkin-stage {
+  position: relative;
+  min-height: 620px;
+  border-radius: var(--vt-r-2xl);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px),
+    #000;
+  background-size: 40px 40px;
+  border: 1px solid var(--vt-border-light);
+  box-shadow: var(--vt-shadow-lg);
+}
+
+.vt-checkin-live {
+  position: absolute;
+  top: var(--vt-sp-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--vt-sp-2);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: var(--vt-r-full);
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, .54);
+  backdrop-filter: blur(12px);
+}
+
+.vt-checkin-live span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--vt-success);
+  animation: vt-pulse-dot 1.5s infinite;
+}
+
+.vt-camera-shell {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.vt-camera-shell #reader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+.vt-camera-shell #reader video {
+  object-fit: cover !important;
+}
+
+.vt-camera-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--vt-sp-3);
+  color: var(--vt-text-2);
+  text-align: center;
+  z-index: 1;
+}
+
+.vt-camera-empty strong {
+  color: var(--vt-text);
+  font-size: var(--vt-text-xl);
+}
+
+.vt-viewfinder.compact {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.vt-camera-shell:not(.is-scanning) .vt-viewfinder.compact {
+  opacity: .3;
+}
+
+.vt-checkin-controls {
+  position: sticky;
+  top: 84px;
+  display: grid;
+  gap: var(--vt-sp-5);
+}
+
+.vt-manual-form {
+  border-top: 1px solid var(--vt-border);
+  padding-top: var(--vt-sp-5);
+}
+
 @media (max-width: 840px) {
   .hero,
-  .grid {
+  .grid,
+  .vt-event-hero,
+  .vt-process-grid,
+  .vt-admin-stats,
+  .vt-ticket-layout,
+  .vt-checkin-console {
     grid-template-columns: 1fr;
   }
 
@@ -920,5 +1340,48 @@ h3 {
   .nav a {
     flex: 1;
     text-align: center;
+  }
+
+  .vt-checkout-card,
+  .vt-checkin-controls {
+    position: static;
+  }
+
+  .vt-event-hero {
+    padding-top: var(--vt-sp-8);
+  }
+
+  .vt-event-stats,
+  .vt-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .vt-admin-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vt-order-row {
+    grid-template-columns: 1fr;
+  }
+
+  .vt-ticket-choice {
+    grid-template-columns: 1fr;
+  }
+
+  .vt-ticket-choice div:last-child {
+    text-align: left;
+  }
+
+  .vt-checkin-stage {
+    min-height: 520px;
+  }
+
+  .vt-ticket-body {
+    grid-template-columns: 1fr;
+  }
+
+  .vt-ticket-qr {
+    justify-items: start;
   }
 }

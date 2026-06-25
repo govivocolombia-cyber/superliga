@@ -59,65 +59,93 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     acc[ticket.order_id] = [...(acc[ticket.order_id] || []), ticket];
     return acc;
   }, {});
+  const paidOrders = orders.filter((order) => order.status === "paid").length;
+  const pendingOrders = orders.filter((order) => order.status === "pending").length;
+  const revenue = orders
+    .filter((order) => order.status === "paid")
+    .reduce((sum, order) => sum + order.total_cents, 0);
+  const checkedIn = tickets.filter((ticket) => ticket.checked_in_at).length;
 
   return (
-    <main className="shell page">
-      <div className="eyebrow">Operacion</div>
-      <h1>Admin</h1>
-      <p className="lede">
-        Ordenes recientes, estado del pago y tickets listos para reenviar o revisar.
-      </p>
+    <main className="shell page vt-admin-screen">
+      <section className="vt-admin-hero">
+        <div>
+          <span className="vt-badge vt-badge-neutral">Operacion</span>
+          <h1>Panel de control</h1>
+          <p>Ordenes, ingresos, tickets y acciones de soporte en un solo lugar.</p>
+        </div>
+        <a className="vt-btn vt-btn-ghost" href="/checkin">Abrir check-in</a>
+      </section>
 
       {searchParams.manual && (
-        <div className="result-box">
+        <div className="vt-alert vt-alert-warning">
           Wompi aun no esta configurado. La orden quedo pendiente y puedes confirmarla manualmente.
         </div>
       )}
 
-      {searchParams.confirmed && <div className="result-box">Pago confirmado y tickets generados.</div>}
+      {searchParams.confirmed && <div className="vt-alert vt-alert-success">Pago confirmado y tickets generados.</div>}
 
-      <section className="page">
-        <div className="section-heading">
-          <span className="step-pill">A</span>
+      <section className="vt-admin-stats">
+        <div className="vt-stat-card">
+          <span className="vt-stat-value">{formatCop(revenue)}</span>
+          <span className="vt-stat-label">Ingresos pagados</span>
+        </div>
+        <div className="vt-stat-card">
+          <span className="vt-stat-value">{paidOrders}</span>
+          <span className="vt-stat-label">Ordenes pagadas</span>
+        </div>
+        <div className="vt-stat-card">
+          <span className="vt-stat-value">{pendingOrders}</span>
+          <span className="vt-stat-label">Pendientes</span>
+        </div>
+        <div className="vt-stat-card">
+          <span className="vt-stat-value">{checkedIn}/{tickets.length}</span>
+          <span className="vt-stat-label">Check-ins</span>
+        </div>
+      </section>
+
+      <section className="vt-card vt-card-lg vt-orders-panel">
+        <div className="vt-panel-title">
           <div>
             <h2>Ordenes recientes</h2>
-            <p className="muted">Las ordenes pagadas muestran sus tickets automaticamente.</p>
+            <p>Las ordenes pagadas muestran sus tickets automaticamente.</p>
           </div>
+          <span className="vt-badge vt-badge-neutral">{orders.length} ordenes</span>
         </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Comprador</th>
-              <th>Total</th>
-              <th>Estado</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
+
+        {orders.length === 0 ? (
+          <div className="vt-empty">
+            <div className="vt-empty-icon">0</div>
+            <h3>No hay ordenes todavia</h3>
+            <p>Cuando llegue la primera compra, aparecera aqui con su estado y tickets.</p>
+          </div>
+        ) : (
+          <div className="vt-order-list">
             {orders.map((order) => (
-              <tr key={order.id}>
-                <td>
+              <article className="vt-order-row" key={order.id}>
+                <div className="vt-order-buyer">
                   <strong>{order.buyer_name}</strong>
-                  <br />
-                  <span className="muted">{order.buyer_email}</span>
-                  <br />
-                  <span className="muted">{order.id}</span>
-                </td>
-                <td>{formatCop(order.total_cents)}</td>
-                <td>
-                  <span className={`status ${order.status}`}>{orderStatusLabel(order.status)}</span>
-                </td>
-                <td>{formatDateTime(order.created_at)}</td>
-                <td>
+                  <span>{order.buyer_email}</span>
+                  <small>{order.id}</small>
+                </div>
+                <div className="vt-order-money">
+                  <strong>{formatCop(order.total_cents)}</strong>
+                  <span>{formatDateTime(order.created_at)}</span>
+                </div>
+                <div>
+                  <span className={`vt-badge ${order.status === "paid" ? "vt-badge-success" : order.status === "pending" ? "vt-badge-warning" : "vt-badge-error"}`}>
+                    {orderStatusLabel(order.status)}
+                  </span>
+                </div>
+                <div className="vt-order-actions">
                   {order.status !== "paid" && (
-                    <form action="/api/admin/confirm-order" method="post" className="form">
+                    <form action="/api/admin/confirm-order" method="post" className="vt-inline-confirm">
                       <input type="hidden" name="orderId" value={order.id} />
-                      <label className="field">
+                      <label>
                         <span>PIN admin</span>
                         <input name="pin" type="password" placeholder="123456" required />
                       </label>
-                      <button className="button" type="submit">
+                      <button className="vt-btn vt-btn-sm vt-btn-primary" type="submit">
                         Confirmar pago
                       </button>
                     </form>
@@ -132,11 +160,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                       ))}
                     </div>
                   ) : null}
-                </td>
-              </tr>
+                </div>
+              </article>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
       </section>
     </main>
   );
