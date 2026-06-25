@@ -41,6 +41,18 @@ async function getAdminData() {
   return { orders, tickets };
 }
 
+function orderStatusLabel(status: OrderRow["status"]) {
+  const labels: Record<OrderRow["status"], string> = {
+    pending: "Pendiente",
+    paid: "Pagada",
+    failed: "Fallida",
+    cancelled: "Cancelada",
+    refunded: "Devuelta"
+  };
+
+  return labels[status];
+}
+
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   const { orders, tickets } = await getAdminData();
   const ticketsByOrder = tickets.reduce<Record<string, TicketRow[]>>((acc, ticket) => {
@@ -53,8 +65,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       <div className="eyebrow">Operacion</div>
       <h1>Admin</h1>
       <p className="lede">
-        Revisa ordenes, confirma pagos manuales y abre tickets. Para produccion, cambia el
-        PIN en `.env.local`.
+        Ordenes recientes, estado del pago y tickets listos para reenviar o revisar.
       </p>
 
       {searchParams.manual && (
@@ -66,7 +77,13 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       {searchParams.confirmed && <div className="result-box">Pago confirmado y tickets generados.</div>}
 
       <section className="page">
-        <h2>Ordenes recientes</h2>
+        <div className="section-heading">
+          <span className="step-pill">A</span>
+          <div>
+            <h2>Ordenes recientes</h2>
+            <p className="muted">Las ordenes pagadas muestran sus tickets automaticamente.</p>
+          </div>
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -89,7 +106,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 </td>
                 <td>{formatCop(order.total_cents)}</td>
                 <td>
-                  <span className={`status ${order.status}`}>{order.status}</span>
+                  <span className={`status ${order.status}`}>{orderStatusLabel(order.status)}</span>
                 </td>
                 <td>{formatDateTime(order.created_at)}</td>
                 <td>
@@ -107,10 +124,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   )}
 
                   {ticketsByOrder[order.id]?.length ? (
-                    <div className="form">
-                      {ticketsByOrder[order.id].map((ticket) => (
+                    <div className="ticket-actions">
+                      {ticketsByOrder[order.id].map((ticket, index) => (
                         <Link className="link-button" href={`/ticket/${ticket.token}`} key={ticket.id}>
-                          Abrir ticket
+                          Ticket {index + 1}
                         </Link>
                       ))}
                     </div>

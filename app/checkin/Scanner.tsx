@@ -15,6 +15,18 @@ type ScannerProps = {
   initialToken?: string;
 };
 
+function resultTitle(result: CheckinResponse["result"]) {
+  const labels: Record<CheckinResponse["result"], string> = {
+    accepted: "Entrada valida",
+    duplicate: "Ticket ya usado",
+    invalid: "Ticket no valido",
+    cancelled: "Ticket cancelado",
+    unpaid: "Pago pendiente"
+  };
+
+  return labels[result];
+}
+
 export default function Scanner({ initialToken }: ScannerProps) {
   const [pin, setPin] = useState("");
   const [deviceLabel, setDeviceLabel] = useState("Puerta 1");
@@ -71,16 +83,24 @@ export default function Scanner({ initialToken }: ScannerProps) {
   }, []);
 
   const accepted = result?.result === "accepted";
+  const blocked = result && result.result !== "accepted";
 
   return (
     <div className="panel">
+      <div className="section-heading">
+        <span className="step-pill">1</span>
+        <div>
+          <h2>Preparar escaner</h2>
+          <p className="muted">Ingresa el PIN del staff y escanea el QR del asistente.</p>
+        </div>
+      </div>
       <div className="form">
         <label className="field">
           <span>PIN de check-in</span>
-          <input value={pin} onChange={(event) => setPin(event.target.value)} type="password" placeholder="123456" />
+          <input value={pin} onChange={(event) => setPin(event.target.value)} type="password" placeholder="PIN del staff" />
         </label>
         <label className="field">
-          <span>Dispositivo</span>
+          <span>Punto de entrada</span>
           <input value={deviceLabel} onChange={(event) => setDeviceLabel(event.target.value)} />
         </label>
       </div>
@@ -102,22 +122,23 @@ export default function Scanner({ initialToken }: ScannerProps) {
         }}
       >
         <label className="field">
-          <span>Token manual o URL del QR</span>
+          <span>Validacion manual</span>
           <input value={manualToken} onChange={(event) => setManualToken(event.target.value)} />
         </label>
-        <button className="button secondary" type="submit">
+        <button className="button secondary" type="submit" disabled={!manualToken.trim()}>
           Validar manual
         </button>
       </form>
 
       {result && (
-        <div className="result-box">
+        <div className={`result-box checkin-result ${accepted ? "accepted" : "blocked"}`}>
           <h2>
-            {accepted ? <CheckCircle2 size={24} /> : <XCircle size={24} />} {result.message}
+            {accepted ? <CheckCircle2 size={34} /> : <XCircle size={34} />} {resultTitle(result.result)}
           </h2>
           <p>
-            <span className={`status ${result.result}`}>{result.result}</span>
+            <span className={`status ${result.result}`}>{result.message}</span>
           </p>
+          {blocked && <p className="decision-text">No permitir ingreso sin verificacion del responsable.</p>}
           <p>
             <strong>{result.ticketType}</strong>
           </p>

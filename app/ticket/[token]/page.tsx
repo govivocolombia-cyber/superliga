@@ -12,6 +12,18 @@ type TicketPageProps = {
   };
 };
 
+function ticketStatusLabel(checkedInAt: string | null, status: string) {
+  if (checkedInAt) {
+    return "Ya usado";
+  }
+
+  if (status === "valid") {
+    return "Valido para ingreso";
+  }
+
+  return "No valido";
+}
+
 export default async function TicketPage({ params }: TicketPageProps) {
   const supabase = adminSupabase();
   const { data: ticket, error } = await supabase
@@ -51,21 +63,32 @@ export default async function TicketPage({ params }: TicketPageProps) {
     <main className="shell page">
       <div className="eyebrow">Ticket digital</div>
       <h1>{event?.name}</h1>
-      <section className="panel qr-box">
-        <img src={qr} alt="Codigo QR del ticket" />
-        <div>
+      <section className="panel ticket-pass">
+        <div className="ticket-summary">
+          <span className={`status ${ticket.checked_in_at ? "duplicate" : ticket.status}`}>
+            {ticketStatusLabel(ticket.checked_in_at, ticket.status)}
+          </span>
           <h2>{ticketType?.name}</h2>
-          <p className="muted">{event?.venue}</p>
-          {event?.starts_at && <p className="muted">{formatDateTime(event.starts_at)}</p>}
-          <p>
-            <strong>Asistente:</strong> {ticket.attendee_name || "Sin nombre"}
-          </p>
-          <p>
-            <strong>Estado:</strong>{" "}
-            <span className={`status ${ticket.checked_in_at ? "accepted" : ticket.status}`}>
-              {ticket.checked_in_at ? "checked-in" : ticket.status}
-            </span>
-          </p>
+          <dl className="details-list">
+            <div>
+              <dt>Asistente</dt>
+              <dd>{ticket.attendee_name || "Sin nombre"}</dd>
+            </div>
+            <div>
+              <dt>Lugar</dt>
+              <dd>{event?.venue}</dd>
+            </div>
+            {event?.starts_at && (
+              <div>
+                <dt>Fecha</dt>
+                <dd>{formatDateTime(event.starts_at)}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+        <div className="qr-box">
+          <img src={qr} alt="Codigo QR del ticket" />
+          <p className="fineprint">Presenta este QR en la entrada. Cada ticket se valida una sola vez.</p>
         </div>
       </section>
     </main>

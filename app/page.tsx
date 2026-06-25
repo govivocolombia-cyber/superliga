@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, ShieldCheck, Ticket } from "lucide-react";
+import { CalendarDays, CheckCircle2, MapPin, ShieldCheck, Ticket } from "lucide-react";
 import { eventSlug } from "@/lib/config";
 import { formatCop, formatDateTime } from "@/lib/format";
 import { publicSupabase } from "@/lib/supabase";
@@ -59,7 +59,13 @@ export default async function HomePage() {
         </div>
 
         <section className="panel" aria-label="Comprar entradas">
-          <h2>Comprar entradas</h2>
+          <div className="section-heading">
+            <span className="step-pill">1</span>
+            <div>
+              <h2>Elige tu entrada</h2>
+              <p className="muted">Completa tus datos y paga seguro con Wompi.</p>
+            </div>
+          </div>
           <div className="ticket-list">
             {ticketTypes.map((ticketType) => (
               <div className="ticket-option" key={ticketType.id}>
@@ -68,7 +74,9 @@ export default async function HomePage() {
                   <p className="muted">{ticketType.description}</p>
                   <div className="price">{formatCop(ticketType.price_cents)}</div>
                 </div>
-                <Ticket size={32} />
+                <div className="ticket-icon">
+                  <Ticket size={24} />
+                </div>
               </div>
             ))}
           </div>
@@ -105,25 +113,29 @@ export default async function HomePage() {
               <input name="buyerDocument" />
             </label>
             <button className="button" type="submit">
-              <Ticket size={18} />
-              Continuar al pago
+              <ShieldCheck size={18} />
+              Pagar y recibir QR
             </button>
+            <p className="fineprint">Tu ticket se genera automaticamente cuando Wompi confirma el pago.</p>
           </form>
         </section>
       </section>
 
       <section className="shell grid" aria-label="Resumen operativo">
         <article className="card">
-          <h3>Pago</h3>
-          <p className="muted">Checkout de Wompi cuando las llaves esten configuradas.</p>
+          <CheckCircle2 size={20} />
+          <h3>Pago confirmado</h3>
+          <p className="muted">No hay QR valido hasta que el pago queda aprobado.</p>
         </article>
         <article className="card">
-          <h3>QR</h3>
-          <p className="muted">Cada ticket recibe un token unico para evitar duplicados.</p>
+          <Ticket size={20} />
+          <h3>QR unico</h3>
+          <p className="muted">Cada entrada se valida una sola vez en puerta.</p>
         </article>
         <article className="card">
-          <h3>Check-in</h3>
-          <p className="muted">El staff valida entradas desde el navegador del celular.</p>
+          <ShieldCheck size={20} />
+          <h3>Entrada clara</h3>
+          <p className="muted">Verde entra, rojo se revisa. Sin interpretaciones.</p>
         </article>
       </section>
     </main>
